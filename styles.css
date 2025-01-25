@@ -123,17 +123,20 @@ body {
 
 .restart-btn {
     background: transparent;
-    border: 1px solid var(--text-color);
+    border: 2px solid var(--text-color);
     color: var(--text-color);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 1rem 2rem;
+    border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 1.2rem;
+    margin-top: 1rem;
 }
 
 .restart-btn:hover {
     background: var(--text-color);
     color: var(--bg-color);
+    transform: translateY(-2px);
 }
 
 .shortcuts {
@@ -203,4 +206,186 @@ body {
 
 .test-completed {
     animation: completion 1s ease;
+}
+
+/* Add these new styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(35, 35, 35, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-text {
+    color: var(--text-color);
+    font-size: 2rem;
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Update the results overlay styles */
+.results-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(35, 35, 35, 0.97);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.5s ease;
+    backdrop-filter: blur(5px);
+}
+
+.results-content {
+    background-color: rgba(45, 45, 45, 0.95);
+    padding: 3rem;
+    border-radius: 15px;
+    border: 2px solid var(--text-color);
+    text-align: center;
+    animation: scaleIn 0.5s ease;
+    box-shadow: 0 0 30px rgba(226, 183, 20, 0.2);
+    min-width: 400px;
+}
+
+.results-content h2 {
+    color: var(--text-color);
+    font-size: 2.5rem;
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(226, 183, 20, 0.3);
+}
+
+.results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.result-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.result-item:hover {
+    transform: translateY(-5px);
+}
+
+.result-label {
+    color: var(--sub-color);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.result-value {
+    color: var(--text-color);
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(226, 183, 20, 0.3);
+}
+
+/* Update restart button in results */
+.results-content .restart-btn {
+    background: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.results-content .restart-btn:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(226, 183, 20, 0.3);
+}
+
+.results-content .shortcuts {
+    margin-top: 2rem;
+    color: var(--sub-color);
+    font-size: 0.9rem;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* Enhanced animations */
+@keyframes fadeIn {
+    from { 
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
+    to { 
+        opacity: 1;
+        backdrop-filter: blur(5px);
+    }
+}
+
+@keyframes scaleIn {
+    from { 
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Add responsive design */
+@media (max-width: 600px) {
+    .results-content {
+        padding: 2rem;
+        min-width: 90%;
+        margin: 1rem;
+    }
+
+    .results-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .result-value {
+        font-size: 2.5rem;
+    }
+
+    .results-content h2 {
+        font-size: 2rem;
+    }
 } 

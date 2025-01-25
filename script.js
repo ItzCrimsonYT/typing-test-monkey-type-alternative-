@@ -2,7 +2,7 @@ const words = [
     'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
     'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
-    'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what'
+    'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'companion', 'passion','sinister', 'crash','santa', 'fantastic', 'their', 'what'
 ];
 
 class TypingTest {
@@ -20,6 +20,7 @@ class TypingTest {
         this.startTime = null;
         this.timeLeft = 60;
         this.isRunning = false;
+        this.overlay = document.querySelector('.overlay');
         
         this.init();
     }
@@ -31,7 +32,7 @@ class TypingTest {
 
     generateText() {
         const shuffledWords = [...words].sort(() => Math.random() - 0.5);
-        const selectedWords = shuffledWords.slice(0, 50);
+        const selectedWords = shuffledWords.slice(0, 10);
         
         // Generate all characters wrapped in spans from the start
         this.textDisplay.innerHTML = selectedWords.map((word, index) => {
@@ -74,17 +75,54 @@ class TypingTest {
         this.isRunning = false;
         this.input.disabled = true;
         
-        // Add completion animation
-        this.textDisplay.classList.add('test-completed');
-        
-        // Show final results
         const finalWpm = this.calculateWPM();
         const finalAccuracy = this.calculateAccuracy();
         
-        // Optional: Show a completion message
-        setTimeout(() => {
-            alert(`Test completed!\nWPM: ${finalWpm}\nAccuracy: ${finalAccuracy}%`);
-        }, 1000);
+        const resultsOverlay = document.createElement('div');
+        resultsOverlay.className = 'results-overlay';
+        resultsOverlay.innerHTML = `
+            <div class="results-content">
+                <h2>Test Complete!</h2>
+                <div class="results-stats">
+                    <div class="result-item">
+                        <span class="result-label">WPM</span>
+                        <span class="result-value">${finalWpm}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Accuracy</span>
+                        <span class="result-value">${finalAccuracy}%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Time</span>
+                        <span class="result-value">${60 - this.timeLeft}s</span>
+                    </div>
+                </div>
+                <button class="restart-btn">Try Again</button>
+                <div class="shortcuts">
+                    <span>Tab + Enter - restart test</span>
+                </div>
+            </div>
+        `;
+
+        // Add event listener for the restart button in results
+        const restartBtn = resultsOverlay.querySelector('.restart-btn');
+        restartBtn.addEventListener('click', () => {
+            document.body.removeChild(resultsOverlay);
+            this.restartTest();
+        });
+
+        // Add keyboard shortcut listener for the results screen
+        const handleResultsKeydown = (e) => {
+            if (e.key === 'Enter' && e.shiftKey) {
+                e.preventDefault();
+                document.body.removeChild(resultsOverlay);
+                this.restartTest();
+                document.removeEventListener('keydown', handleResultsKeydown);
+            }
+        };
+        document.addEventListener('keydown', handleResultsKeydown);
+        
+        document.body.appendChild(resultsOverlay);
     }
 
     restartTest() {
@@ -103,23 +141,43 @@ class TypingTest {
         this.textDisplay.classList.remove('test-completed'); // Remove completion class
         this.generateText();
         this.input.focus();
+        if (this.overlay) {
+            this.overlay.classList.remove('hidden');
+        }
     }
 
     addEventListeners() {
+        document.addEventListener('keydown', (e) => {
+            // Tab + Enter to restart
+            if (e.key === 'Enter' && e.shiftKey) {  // Changed to Shift+Enter
+                e.preventDefault();
+                this.restartTest();
+            }
+            // Tab to start/remove overlay
+            else if (e.key === 'Tab') {
+                e.preventDefault();
+                if (this.overlay && !this.overlay.classList.contains('hidden')) {
+                    this.overlay.classList.add('hidden');
+                    this.input.focus();
+                }
+            }
+            else if (e.key === 'Escape') {
+                this.restartTest();
+                if (this.overlay) {
+                    this.overlay.classList.remove('hidden');
+                }
+            }
+        });
+
         this.input.addEventListener('input', () => {
             if (!this.isRunning) this.startTest();
             this.checkInput();
         });
 
-        this.restartBtn.addEventListener('click', () => this.restartTest());
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                this.restartTest();
-            }
-            if (e.key === 'Escape') {
-                this.restartTest();
+        this.restartBtn.addEventListener('click', () => {
+            this.restartTest();
+            if (this.overlay) {
+                this.overlay.classList.remove('hidden');
             }
         });
     }
@@ -144,7 +202,7 @@ class TypingTest {
             }
         }
 
-        // Only move to next word if space is pressed and the word is complete
+        // Handle word completion
         if (inputValue.endsWith(' ') && inputValue.trim().length === currentWordText.length) {
             this.totalCharacters += currentWordText.length;
             
@@ -160,10 +218,12 @@ class TypingTest {
             
             if (this.currentWordIndex < words.length) {
                 words[this.currentWordIndex].classList.add('current');
+                this.input.value = '';
+                this.updateStats();
+            } else {
+                // End test when last word is completed
+                this.endTest();
             }
-            
-            this.input.value = '';
-            this.updateStats();
         }
     }
 
