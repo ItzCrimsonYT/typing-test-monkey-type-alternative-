@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeSpeed</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-label">WPM</span>
+                    <span id="wpm">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Accuracy</span>
+                    <span id="accuracy">0%</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Time</span>
+                    <span id="time">60s</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="typing-test">
+            <div id="text-display" class="text-display"></div>
+            <input type="text" id="input" class="input" autocomplete="off" autocapitalize="off" autocorrect="off">
+        </div>
+
+        <div class="footer">
+            <button id="restart" class="restart-btn">Restart Test</button>
+            <div class="shortcuts">
+                <span>Tab + Enter - restart test</span>
+                <span>Esc - reset</span>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

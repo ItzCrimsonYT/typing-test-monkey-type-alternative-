@@ -1,0 +1,206 @@
+:root {
+    --bg-color: #232323;
+    --text-color: #e2b714;
+    --sub-color: #646669;
+    --caret-color: #e2b714;
+    --error-color: #ca4754;
+    --font-family: 'Roboto Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    color: var(--sub-color);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.text-display {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    min-height: 100px;
+    white-space: pre-wrap;
+}
+
+.text-display span {
+    position: relative;
+    display: inline;
+}
+
+.char {
+    position: relative;
+    display: inline;
+    color: var(--sub-color);
+}
+
+.char.correct {
+    color: #00ff00;
+}
+
+.char.incorrect {
+    color: var(--error-color);
+    text-decoration: none;
+}
+
+.extra-chars {
+    color: var(--error-color);
+    text-decoration: underline;
+}
+
+.word-correct {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.word-incorrect {
+    color: var(--error-color);
+    opacity: 0.7;
+}
+
+.current {
+    color: var(--sub-color);
+}
+
+.current::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 2px;
+    height: 1.2em;
+    background-color: var(--caret-color);
+    animation: blink 1s infinite;
+}
+
+.input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.restart-btn {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.restart-btn:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+.shortcuts {
+    margin-top: 1rem;
+    color: var(--sub-color);
+    font-size: 0.8rem;
+}
+
+.shortcuts span {
+    margin: 0 0.5rem;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.char.incorrect {
+    animation: shake 0.1s ease;
+}
+
+.word-correct, .word-incorrect {
+    animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0.7;
+    }
+}
+
+.typing-test:focus-within .text-display {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .text-display {
+        font-size: 1.2rem;
+    }
+}
+
+/* Add space between words */
+.text-display > span:not(:last-child)::after {
+    content: ' ';
+    white-space: pre;
+}
+
+@keyframes completion {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); filter: brightness(1.5); }
+    100% { transform: scale(1); }
+}
+
+.test-completed {
+    animation: completion 1s ease;
+} 
